@@ -223,6 +223,42 @@ def backtest_qullamaggie(df: pd.DataFrame):
     return matched
 
 log_debug(data['Ticker'].iloc[0], "No Parabolic setup")
+# Risk Management Helpers
+
+def calculate_atr(df: pd.DataFrame, period: int = 14) -> float:
+    """Average True Range (ATR) using Wilder's method."""
+    high_low = df['High'] - df['Low']
+    high_close = (df['High'] - df['Close'].shift()).abs()
+    low_close = (df['Low'] - df['Close'].shift()).abs()
+    ranges = pd.concat([high_low, high_close, low_close], axis=1)
+    true_range = ranges.max(axis=1)
+    atr = true_range.rolling(window=period).mean().iloc[-1]
+    return atr
+
+
+def atr_stop(entry_price: float, atr: float, multiplier: float = 1.5) -> float:
+    """Stop loss price based on ATR multiplier below entry."""
+    return entry_price - multiplier * atr
+
+
+def trailing_stop(current_high: float, atr: float, multiplier: float = 1.0) -> float:
+    """Trailing stop that moves up as price makes new highs."""
+    return current_high - multiplier * atr
+
+
+def position_size(account_risk: float, entry_price: float, stop_price: float) -> int:
+    """
+    Position sizing based on fixed dollar risk.
+    account_risk: dollars willing to risk on trade
+    entry_price: trade entry price
+    stop_price: stop loss price
+    """
+    risk_per_share = abs(entry_price - stop_price)
+    if risk_per_share == 0:
+        return 0
+    shares = account_risk // risk_per_share
+    return int(shares)
+
 
 # 6. Email Notification
 def send_email(subject, body):
@@ -250,8 +286,9 @@ def process_ticker(ticker):
     df = add_moving_averages(df)
     backtest_ep(df)
     backtest_breakouts(df)
+    
     backtest_parabolic(df)
-        backtest_qullamaggie(df)
+       backtest_qullamaggie(df)
 
 # 8. Run full scan
 def run_scan():
