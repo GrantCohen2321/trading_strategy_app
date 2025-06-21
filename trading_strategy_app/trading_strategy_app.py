@@ -289,6 +289,50 @@ def process_ticker(ticker):
     
     backtest_parabolic(df)
        backtest_qullamaggie(df)
+# 7. Historical Backtesting
+
+def historical_backtest(tickers, start_date: str, end_date: str, account_risk: float = 100):
+    """Very simple walk‑forward backtest:
+    1. Loop through each day in the date range
+    2. Apply Qullamaggie scanner on each day's data
+    3. Simulate entry at close, exit after 5 trading days or stop
+    4. Record R multiple
+    """
+    results = []
+    for ticker in tickers:
+        df = fetch_data(ticker, start_date, end_date)
+        if df.empty or len(df) < 252:
+            continue
+        df = add_moving_averages(df)
+        for i in range(252, len(df) - 5):
+            window = df.iloc[: i + 1].copy()
+            if backtest_qullamaggie(window):
+                entry_idx = window.index[-1]
+                entry_price = window['Close'].iloc[-1]
+                atr = calculate_atr(window)
+                stop_price = atr_stop(entry_price, atr)
+
+                # Exit after 5 bars (placeholder exit logic)
+                exit_idx = i + 5
+                exit_price = df['Close'].iloc[exit_idx]
+                gain = (exit_price - entry_price) / entry_price
+                r_multiple = gain / ((entry_price - stop_price) / entry_price)
+
+                results.append({
+                    'Ticker': ticker,
+                    'EntryDate': entry_idx.date(),
+                    'ExitDate': df.index[exit_idx].date(),
+                    'Return': gain,
+                    'R': r_multiple,
+                })
+
+    if results:
+        df_results = pd.DataFrame(results)
+        df_results.to_csv('backtest_results.csv', index=False)
+        print(f"Saved {len(df_results)} trades to backtest_results.csv")
+    else:
+        print("No trades generated in backtest.")
+
 
 # 8. Run full scan
 def run_scan():
