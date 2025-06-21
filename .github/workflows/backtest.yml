@@ -6,7 +6,7 @@ on:
       tickers:
         description: 'Comma-separated list of tickers'
         required: false
-        default: 'AAPL,MSFT,GOOGL'
+        defaul'ALL'
       start_date:
         description: 'Start date (YYYY-MM-DD)'
         required: false
@@ -20,8 +20,10 @@ jobs:
   backtest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actio
+      ns/checkout@v4
+      with:
+        ref: feature/criteria-enhancements
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
