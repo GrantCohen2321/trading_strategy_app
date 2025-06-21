@@ -175,7 +175,54 @@ def backtest_parabolic(data):
                 save_chart(data, data['Ticker'].iloc[0], entry_date, "Parabolic")
                 return
     if not matched:
-        log_debug(data['Ticker'].iloc[0], "No Parabolic setup")
+        
+        
+        # Qullamaggie Breakout / High RVOL Setup
+
+def backtest_qullamaggie(df: pd.DataFrame):
+    """Return True/False if the latest bar meets Qullamaggie-style breakout criteria.
+
+    Criteria (simplified):
+    1. Close within 2% of 52-week high
+    2. Relative Volume (today vol ÷ 50-day avg) >= 2
+    3. Gap-up >= 4% over yesterday close
+    4. Close above 10-EMA and 50-SMA
+    """
+    if df.shape[0] < 252:
+        return False  # Not enough data for 52-week high
+
+    latest = df.iloc[-1]
+    prev = df.iloc[-2]
+
+    # 52-week high proximity
+    high_52w = df['High'].rolling(window=252).max().iloc[-1]
+    cond1 = latest['Close'] >= 0.98 * high_52w
+
+    # Relative volume
+    avg_vol_50 = df['Volume'].rolling(window=50).mean().iloc[-1]
+    rvol = latest['Volume'] / avg_vol_50 if avg_vol_50 else 0
+    cond2 = rvol >= 2
+
+    # Gap-up percentage
+    gap_pct = (latest['Open'] - prev['Close']) / prev['Close']
+    cond3 = gap_pct >= 0.04
+
+    # Moving averages
+    ema10 = df['Close'].ewm(span=10).mean().iloc[-1]
+    sma50 = df['Close'].rolling(window=50).mean().iloc[-1]
+    cond4 = latest['Close'] > ema10 and latest['Close'] > sma50
+
+    matched = cond1 and cond2 and cond3 and cond4
+
+    if matched:
+        log_result("Qullamaggie", latest['Ticker'], (latest['Close'] - prev['Close']) / prev['Close'], latest.name.date(), "Qullamaggie")
+        save_chart(df, latest['Ticker'], latest.name.date(), "Qullamaggie")
+    else:
+        log_debug(latest['Ticker'], "No Qullamaggie setup")
+
+    return matched
+
+log_debug(data['Ticker'].iloc[0], "No Parabolic setup")
 
 # 6. Email Notification
 def send_email(subject, body):
@@ -204,6 +251,7 @@ def process_ticker(ticker):
     backtest_ep(df)
     backtest_breakouts(df)
     backtest_parabolic(df)
+        backtest_qullamaggie(df)
 
 # 8. Run full scan
 def run_scan():
