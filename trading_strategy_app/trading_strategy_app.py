@@ -72,13 +72,46 @@ def add_moving_averages(data):
         data[f'SMA_{ma}'] = data['Close'].rolling(window=ma).mean()
     return data
 
-# Async stock data fetcher
+
+import requests# Async stock data fetcher
 async def fetch_data_async(session, ticker: str, start: str, end: str):
     """Fetch price data asynchronously using yfinance in a thread executor."""
     loop = asyncio.get_event_loop()
     return await loop.run_in_executor(
         None,
         lambda: yf.download(ticker, start=start, end=end, progress=False),
+
+# Fetch all NASDAQ tickers via Polygon
+
+def get_nasdaq_tickers() -> list:
+    """Return a list of active NASDAQ tickers using the Polygon API."""
+    api_key = os.getenv("POLYGON_API_KEY")
+    if not api_key:
+        logging.error("POLYGON_API_KEY not found in environment variables.")
+        return []
+
+    url = "https://api.polygon.io/v3/reference/tickers"
+    params = {
+        "exchange": "XNAS",
+        "active": "true",
+        "limit": 1000,
+        "apiKey": api_key,
+    }
+    tickers = []
+    while True:
+        resp = requests.get(url, params=params, timeout=30)
+        if resp.status_code != 200:
+            logging.error("Polygon API error: %s", resp.text)
+            break
+        data = resp.json()
+        tickers.extend([item["ticker"] for item in data.get("results", [])])
+        next_url = data.get("next_url")
+        if not next_url:
+            break
+        # Extract cursor parameter for next page
+        cursor = next_url.split("cursor=")[-1]
+        params["cursor"] = cursor
+    return tickers
     )
 
 # 4. Logs
@@ -317,7 +350,11 @@ def historical_backtest(tickers, start_date: str, end_date: str, account_risk: f
     3. Simulate entry at close, exit after 5 trading days or stop
     4. Record R multiple
     """
-    results = []
+        # Auto-fetch NASDAQ tickers if requested
+    if tickers is None or (isinstance(tickers, str) and tickers.upper() == "ALL"):
+        tickers = get_nasdaq_tickers()
+
+results = []
     for ticker in tickers:
         df = fetch_data(ticker, start_date, end_date)
         if df.empty or len(df) < 252:
