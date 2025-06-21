@@ -6,7 +6,7 @@ on:
       tickers:
         description: 'Comma-separated list of tickers'
         required: false
-        defaul'ALL'
+        : defaul'ALL'
       start_date:
         description: 'Start date (YYYY-MM-DD)'
         required: false
