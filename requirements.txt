@@ -1,0 +1,4 @@
+polygon-api-client
+pandas
+numpy
+python-dotenv
