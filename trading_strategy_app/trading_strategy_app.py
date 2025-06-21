@@ -12,6 +12,16 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import concurrent.futures
+import asyncio
+import aiohttp
+import logging
+from dotenv import load_dotenv
+
+# Initialize environment variables
+load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # 1. Get S&P 500 Tickers
 def get_sp500_tickers():
@@ -61,6 +71,15 @@ def add_moving_averages(data):
     for ma in MOVING_AVERAGES:
         data[f'SMA_{ma}'] = data['Close'].rolling(window=ma).mean()
     return data
+
+# Async stock data fetcher
+async def fetch_data_async(session, ticker: str, start: str, end: str):
+    """Fetch price data asynchronously using yfinance in a thread executor."""
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(
+        None,
+        lambda: yf.download(ticker, start=start, end=end, progress=False),
+    )
 
 # 4. Logs
 results_log = []
