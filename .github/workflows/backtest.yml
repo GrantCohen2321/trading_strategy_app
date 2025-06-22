@@ -7,11 +7,11 @@ on:
         description: 'Comma-separated list of tickers'
         required: false
              default: 'AAPL,MSFT,GOOGL'
-               start_date:
+               art_date:
              description: 'Start date (YYYY-MM-DD)'
              required: false
              default: '2024-01-01'
-               end_date:
+               d_date:
              description: 'End date (YYYY-MM-DD)'
              required: false
              default: '2025-01-01'
