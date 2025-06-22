@@ -7,34 +7,34 @@ on:
         description: 'Comma-separated list of tickers'
         required: false
              default: 'AAPL,MSFT,GOOGL'
-      start_date:
-        description: 'Start date (YYYY-MM-DD)'
-        required: false
-        default: '2024-01-01'
-      end_date:
-        description: 'End date (YYYY-MM-DD)'
-        required: false
-        default: '2025-01-01'
+           start_date:
+             description: 'Start date (YYYY-MM-DD)'
+             required: false
+             default: '2024-01-01'
+           end_date:
+             description: 'End date (YYYY-MM-DD)'
+             required: false
+             default: '2025-01-01'
 
 jobs:
   backtest:
     runs-on: ubuntu-latest
     steps:
-           - uses: actions/checkout@v44
+           - uses: actions/checkout@v4
      
     
-               - name: Set up Python
+           - name: Set up Python
              uses: actions/setup-python@v5
      
-                            with:
+             with:
                python-version: '3.10'
 
            - name: Install dependencies
-                       run: |
-                    pip install --no-cache-dir -r requirements.txt
+             run: |
+               pip install --no-cache-dir -r requirements.txt
 
            - name: Run backtest
-                run: |
+             run: |
           python - << 'PY'
           import os
           from trading_strategy_app.trading_strategy_app import historical_backtest
