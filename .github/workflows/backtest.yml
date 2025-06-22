@@ -3,7 +3,7 @@ name: Backtest
 on:
   workflow_dispatch:
     inputs:
-      tickers:
+        tickers:
         description: 'Comma-separated list of tickers'
         required: false
              default: 'AAPL,MSFT,GOOGL'
