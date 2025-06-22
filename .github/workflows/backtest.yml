@@ -6,7 +6,7 @@ on:
       tickers:
         description: 'Comma-separated list of tickers'
         required: false
-        : defaul'ALL'
+            default: 'AAPL,MSFT,GOOGL'
       start_date:
         description: 'Start date (YYYY-MM-DD)'
         required: false
@@ -20,21 +20,20 @@ jobs:
   backtest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actio
-      ns/checkout@v4
-      with:
-        ref: feature/criteria-enhancements
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+           - uses: actions/checkout@v44
+     
+    
+         -      name: Set up Python
+                ses: actions/setup-python@v5
+                 with:
+                    python-version: '3.10'
 
-      - name: Install dependencies
-        run: |
-          pip install --no-cache-dir -r requirements.txt
+           - name: Install dependencies
+                       run: |
+                    pip install --no-cache-dir -r requirements.txt
 
-      - name: Run backtest
-        run: |
+           - name: Run backtest
+                run: |
           python - << 'PY'
           import os
           from trading_strategy_app.trading_strategy_app import historical_backtest
@@ -45,10 +44,10 @@ jobs:
 
           historical_backtest(tickers, start, end)
           PY
-
+     
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: backtest_results
-          path: backtest_results.csv
+                uses: actions/upload-artifact@v4
+                with:
+                    name: backtest_results
+                    path: backtest_results.csv
 # trigger
