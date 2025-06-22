@@ -2,19 +2,19 @@ name: Backtest
 
 on:
   workflow_dispatch:
-    inputs:
-        tickers:
+    i    inputs:
+      tickers:
         description: 'Comma-separated list of tickers'
         required: false
-             default: 'AAPL,MSFT,GOOGL'
-               art_date:
-             description: 'Start date (YYYY-MM-DD)'
-             required: false
-             default: '2024-01-01'
-               d_date:
-             description: 'End date (YYYY-MM-DD)'
-             required: false
-             default: '2025-01-01'
+        default: 'AAPL,MSFT,GOOGL'
+      start_date:
+        description: 'Start date (YYYY-MM-DD)'
+        required: false
+        default: '2024-01-01'
+      end_date:
+        description: 'End date (YYYY-MM-DD)'
+        required: false
+        default: '2025-01-01'-01'
 
 jobs:
   backtest:
