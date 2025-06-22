@@ -6,7 +6,7 @@ on:
       tickers:
         description: 'Comma-separated list of tickers'
         required: false
-                       default: 'AAPL,MSFT,GOOGL'
+             default: 'AAPL,MSFT,GOOGL'
       start_date:
         description: 'Start date (YYYY-MM-DD)'
         required: false
