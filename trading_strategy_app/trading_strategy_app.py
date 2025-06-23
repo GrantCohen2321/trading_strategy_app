@@ -197,8 +197,8 @@ def send_email(subject, body):
     try:    
             #required_vars = [, SMTP_POrequired_va#
         required_vars = [SMTP_SERVER, SMTP_PORT, EMAIL_SENDER, EMAIL_RECEIVER, SMTP_PASSWORD]
-            print("Email skipped: SMTP environment variables are not fully set.")
-                                return                    
+          print("Email skipped: SMTP environment variables are not fully set.")          
+                                            return                    
 
                         import smtplib        
     
