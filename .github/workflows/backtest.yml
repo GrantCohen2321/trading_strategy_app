@@ -1,10 +1,10 @@
 name: Backtest
 
 on:
-  workflow_dispatch::
+     workflow_dispatch:
     inputs:
           tickers:
-     description: 'Comma-separated list of tickers'
+     description: 'omma-separated list of tickers'
         required: false
         default: 'AAPL,MSFT,GOOGL'
           start_date:
