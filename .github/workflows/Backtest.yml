@@ -34,7 +34,7 @@ jobs:
 
       - name: Run backtest
         run: |
-          python trading_strategy_app/backtest.py
+         python trading_strategy_app/trading_strategy_app.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
