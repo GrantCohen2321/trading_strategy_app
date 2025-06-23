@@ -1,7 +1,7 @@
             name: Backtest
 
 on:
-    workflow_dispath:
+      workflow_dispath:
         inputs: 
           tickers:
      description: 'Comma-separated list of tickers'
