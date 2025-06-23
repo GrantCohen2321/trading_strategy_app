@@ -1,4 +1,4 @@
-import matplotlib
+https://github.com/GrantCohen2321/trading_strategy_app/edit/main/trading_strategy_app/trading_strategy_app.pyimport matplotlib
 matplotlib.use('Agg')
 import yfinance as yf
 import pandas as pd
@@ -14,17 +14,27 @@ from email.mime.multipart import MIMEMultipart
 import concurrent.futures
 from nasdaq_scanner import is_episodic_pivot
 
-# 1. Get S&P 500 Tickers
-def get_sp500_tickers():
-    url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    table = soup.find('table', {'id': 'constituents'})
+# # 1. Get NASDAQ Tickers via Polygon
+POLYGON_API_KEY = os.getenv("POLYGON_API_KEY")
+
+def get_nasdaq_tickers() -> list:
+    """Fetch all active NASDAQ tickers (~5,000) using Polygon’s REST API."""
+    if not POLYGON_API_KEY:
+        raise ValueError("POLYGON_API_KEY not set in environment variables")
+
     tickers = []
-    for row in table.find_all('tr')[1:]:
-        symbol = row.find_all('td')[0].text.strip()
-        if '.' not in symbol:
-            tickers.append(symbol)
+    url = (
+        "https://api.polygon.io/v3/reference/tickers?"
+        "market=stocks&exchange=XNAS&active=true&limit=1000&apiKey=" + POLYGON_API_KEY
+    )
+
+    while url:
+        resp = requests.get(url, timeout=30).json()
+        tickers.extend([item["ticker"] for item in resp.get("results", [])])
+        url = resp.get("next_url")
+        if url:
+            # The next_url from Polygon doesn’t include the API key
+            url += f"&apiKey={POLYGON_API_KEY}"
     return tickers
 
 # 2. Configuration
@@ -215,7 +225,7 @@ def process_ticker(ticker):
 
 # 8. Run full scan
 def run_scan():
-    tickers = get_sp500_tickers()
+    tickers = get_nasdaq_tickers()
     print(f"Scanning {len(tickers)} tickers...\n")
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
         executor.map(process_ticker, tickers)
