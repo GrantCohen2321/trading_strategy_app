@@ -12,6 +12,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import concurrent.futures
+from nasdaq_scanner import is_episodic_pivot
 
 # 1. Get S&P 500 Tickers
 def get_sp500_tickers():
