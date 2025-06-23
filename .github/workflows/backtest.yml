@@ -1,4 +1,4 @@
-name: Backtest
+naname: Backtest
 
 on:
       workflow_dispatch:
