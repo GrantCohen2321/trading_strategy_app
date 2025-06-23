@@ -194,11 +194,11 @@ def send_email(subject, body):
     msg['To'] = EMAIL_RECEIVER
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
-        try:
-                required_vars = [SMTP_SERVER, SMTP_PORT, EMAIL_SENDER, EMAIL_RECEIVER, SMTP_PASSWORD]
+    try:
+            required_vars = [SMTP_SERVER, SMTP_PORT, EMAIL_SENDER, EMAIL_RECEIVER, SMTP_PASSWORD]
             if any(v is None or v == "" for v in required_vars):
-            prin        t("Email skipped: SMTP environment variables are not fully set.")
-                    return
+            print        t("Email skipped: SMTP environment variables are not fully set.")
+                    return    
 
                 import smtplib
     
