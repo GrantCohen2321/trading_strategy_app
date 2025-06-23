@@ -194,21 +194,21 @@ def send_email(subject, body):
     msg['To'] = EMAIL_RECEIVER
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
-    try:
-        required_vars = [SMTP_SERVER, SMTP_PORT, EMAIL_SENDER, EMAIL_RECEIVER, SMTP_PASSWORD]
-    if any(v is None or v == "" for v in required_vars):
-        print("Email skipped: SMTP environment variables are not fully set.")
-        return
+        try:
+                required_vars = [SMTP_SERVER, SMTP_PORT, EMAIL_SENDER, EMAIL_RECEIVER, SMTP_PASSWORD]
+            if any(v is None or v == "" for v in required_vars):
+            prin        t("Email skipped: SMTP environment variables are not fully set.")
+                    return
 
-        import smtplib
+                import smtplib
     
-            with smtpllib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-                server.starttls()
-                server.login(EMAIL_SENDER, SMTP_PASSWORD)
-                server.send_message(msg)
-                print("Email sent!")
-    except Exception as e:
-        print(f"Email failed: {e}")
+                    with smtpllib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+                            server.starttls()
+                            server.login(EMAIL_SENDER, SMTP_PASSWORD)
+                            server.send_message(msg)
+                            print("Email sent!")
+        except Exception as e:
+                print(f"Email failed: {e}")
 
 # 7. Worker
 def process_ticker(ticker):
