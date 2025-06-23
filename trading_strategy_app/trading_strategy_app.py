@@ -1,4 +1,3 @@
-https://github.com/GrantCohen2321/trading_strategy_app/edit/main/trading_strategy_app/trading_strategy_app.pyimport matplotlib
 matplotlib.use('Agg')
 import yfinance as yf
 import pandas as pd
