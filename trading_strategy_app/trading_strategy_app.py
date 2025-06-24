@@ -13,6 +13,36 @@ from email.mime.multipart import MIMEMultipart
 import concurrent.futures
 from nasdaq_scanner import is_episodic_pivot
 
+
+def send_email(subject: str, body: str):
+    SMTP_SERVER = os.getenv("SMTP_SERVER")
+    SMTP_PORT = os.getenv("SMTP_PORT")
+    EMAIL_SENDER = os.getenv("EMAIL_SENDER")
+    EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
+    SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+
+    msg = MIMEMultipart()
+    msg["Subject"] = subject
+    msg["From"] = EMAIL_SENDER
+    msg["To"] = EMAIL_RECEIVER
+    msg.attach(MIMEText(body, "plain"))
+
+    try:
+        required_vars = [SMTP_SERVER, SMTP_PORT, EMAIL_SENDER, EMAIL_RECEIVER, SMTP_PASSWORD]
+        if not all(required_vars):
+            print("Email skipped: SMTP environment variables are not fully set.")
+            return
+
+        import smtplib
+
+        with smtplib.SMTP(SMTP_SERVER, int(SMTP_PORT)) as server:
+            server.starttls()
+            server.login(EMAIL_SENDER, SMTP_PASSWORD)
+            server.send_message(msg)
+    except Exception as e:
+        print(f"Email failed: {e}")
+
+
 # # 1. Get NASDAQ Tickers via Polygon
 POLYGON_API_KEY = os.getenv("POLYGON_API_KEY")
 
