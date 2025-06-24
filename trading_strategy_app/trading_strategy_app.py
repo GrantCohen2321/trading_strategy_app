@@ -200,11 +200,11 @@ def send_email(subject, body):
           print("Email skipped: SMTP environment variables are not fully set.")          
                                             return                    
 
-                        import smtplib        
-    
-                    with smtpllib.SMTP(SMTP_SERVER,  SMTP_PORT) as server:
-                                        serve.starttls ()   
-                                            server.login(EMAIL_SENDER, SMTP_PASSWORD)
+                            import smtplib        
+        
+                        with smtpllib.SMTP(SMTP_SERVER,  SMTP_PORT) as server:
+                                            serve.starttls ()   
+                                                server.login(EMAIL_SENDER, SMTP_PASSWORD)
                                                 server.send_message(msg)
                                             print("Email sent!")
         except Exception as e:    
