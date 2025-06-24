@@ -29,9 +29,9 @@ def send_email(subject: str, body: str):
 
     try:
         required_vars = [SMTP_SERVER, SMTP_PORT, EMAIL_SENDER, EMAIL_RECEIVER, SMTP_PASSWORD]
-        if not all(required_vars):
-            print("Email skipped: SMTP environment variables are not fully set.")
-            return
+                    if not all(required_vars):
+                        print("Email skipped: SMTP environment variables are not fully set.")
+                        return
 
         import smtplib
 
