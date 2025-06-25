@@ -32,14 +32,14 @@ def send_email(subject: str, body: str):
                             print("Email skipped: SMTP environment variables are not fully set.")
                 return
 
-    import smtplib
+    i     import smtplib
 
             with smtplib.SMTP(SMTP_SERVER, int(SMTP_PORT)) as server:
                        server.starttls()
                        server.login(EMAIL_SENDER, SMTP_PASSWORD)
                        server.send_message(msg)sg)
            except Exception as e:
-       print(f"Email failed: {e}")
+           print(f"Email failed: {e}")
 
 
 # # 1. Get NASDAQ Tickers via Polygon
