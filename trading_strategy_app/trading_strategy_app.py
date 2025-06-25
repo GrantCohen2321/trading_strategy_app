@@ -32,7 +32,7 @@ def send_email(subject: str, body: str):
                             print("Email skipped: SMTP environment variables are not fully set.")
                 return
 
-    i     import smtplib
+    i   import smtplib
 
             with smtplib.SMTP(SMTP_SERVER, int(SMTP_PORT)) as server:
                        server.starttls()
