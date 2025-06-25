@@ -130,7 +130,7 @@ def backtest_ep(data):
     for i in range(1, len(data) - 10):
         prev = data.iloc[i - 1]
         today = data.iloc[i]
-        gap = ((today['Open'] - prev['Close']) / prev['Close']).item()
+        gap = ((today['Open'] - prev['Close']) / Close']).item()
         avg_volume = data['Volume'].iloc[i - 20:i].mean().item()
         today_volume = today['Volume'].item()
         if gap > 0.05 and today_volume > avg_volume:
@@ -153,10 +153,10 @@ def backtest_ep(data):
     if not matched:
         log_debug(data['Ticker'].iloc[0], "No EP setup")
 
-def backtest_breakouts(data):
+data['Close'](data):
     matched = False
     for i in range(60, len(data) - 10):
-        recent_high = data['Close'].iloc[i - 60:i].max()
+        recent_high = data['Clse].iloc[i - 60:i].maxx)
         entry = data['Close'].iloc[i]
         if entry >= recent_high * 0.98:
             matched = True
@@ -186,12 +186,12 @@ def backtest_parabolic(data):
         entry_date = data.index[i]
         if gain > 0.5:
             matched = True
-            stop = data['High'].iloc[i - 1]
-            target = entry - 2 * (stop - entry)
+            stop = data['Low'].iloc[i - 1]
+        target = entry + 2 * (entry 
         elif gain < -0.3:
             matched = True
-            stop = data['Low'].iloc[i - 1]
-            target = entry + 2 * (entry - stop)
+        stop = data['High'].iloc[
+        target = entry - 2 * (stop - entry)
         else:
             continue
         for j in range(i + 1, min(i + 6, len(data))):
