@@ -26,8 +26,7 @@ def send_email(subject: str, body: str):
     msg["From"] = EMAIL_SENDER
     msg["To"] = EMAIL_RECEIVER
     msg.attach(MIMEText(body, "plain"))
-    
-            try:
+    try::
             required_vars = [SMTP_SERVER, SMTP_PORT, EMAIL_SENDER, EMAIL_RECEIVER, SMTP_PASSWORD]
                     if not all(required_vars):
                             print("Email skipped: SMTP environment variables are not fully set.")
@@ -53,7 +52,7 @@ def get_nasdaq_tickers() -> list:
 
     tickers = []
     url = (
-        "https://api.polygon.io/v3/reference/tickers?"
+     "https://api.polygon.io/v3/reference/tickers?"
         "market=stocks&exchange=XNAS&active=true&limit=1000&apiKey=" + POLYGON_API_KEY
     )
 
